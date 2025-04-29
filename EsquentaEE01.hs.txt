@@ -1,0 +1,50 @@
+-- Questão 01: Implemente a função reverso :: [a] -> [a], que inverte a ordem dos elementos de uma lista. OBS: Não é permitido usar a função reverse da biblioteca padrão.
+
+reverso :: [a] -> [a]
+reverso [] = [] -- Caso Base: Lista Vazia é a própria lista invertida
+reverso (x:xs) = reverso xs ++ [x] -- Recursivamente inverte o resto da lista e adiciona o primeiro elemento ao final
+
+
+-- Questão 02: Crie uma função que converta um quantidade de segundos em uma String no formato "HH:MM:SS". O valor máximo possível a ser recebido por essa função é 359999 ("99:59:59").
+
+
+converter :: Int -> String
+converter segundos =
+    let horas = segundos `div` 3600 -- Dividimos por 3600 para obter as horas
+        minutos = (segundos `mod` 3600) `div` 60 -- O resto de 3600 é o restante para minutos
+        segundosRestantes = segundos `mod` 60 -- O restante após dividir por 60 nos dá os segundos
+    in printf "%02d:%02d:%02d" horas minutos segundosRestantes
+
+
+
+-- Questão 03: Implemente uma função chamada rotateLeft :: Int -> [a] -> [a], que rotaciona uma lista para a esquerda uma quantidade n de vezes de acordo com o primeiro parâmetro da função.
+
+
+rotateLeft :: Int -> [a] -> [a]
+rotateLeft n xs = let n' = n `mod` length xs
+                  in drop n' xs ++ take n' xs
+
+
+
+-- Questão 04: Crie uma função que remove o menor elemento de uma lista. Caso este elemento apareça mais de uma vez na lista, remova apenas a primeira ocorrência.
+
+
+removeMin :: Ord a => [a] -> [a]
+removeMin [] = [] -- Caso base: Se a lista estiver vazia, retorna uma lista vazia
+removeMin xs = let minVal = minimum xs -- Encontra o menor valor na lista
+               in removeFirst minVal xs -- Chama a função que remove a primeira ocorrência do valor
+
+-- Função auxiliar para remover a primeira ocorrência do valor
+removeFirst :: Eq a => a -> [a] -> [a]
+removeFirst _ [] = [] -- Se a lista estiver vazia, retorna uma lista vazia
+removeFirst x (y:ys)
+  | x == y = ys -- Se encontrar o valor x, remove ele e retorna o restante da lista
+  | otherwise = y : removeFirst x ys -- Caso contrário, mantéms o elemento y e continua a busca
+
+
+
+-- Questão 05: Crie uma função (inclua a definição do seu tipo) que recebe uma lista de funções e um segundo argumento. Esta função devolve uma lista com todas as funções que ao serem aplicadas ao argumento retornam False.
+
+
+escolheFuncoes :: [a -> Bool] -> a -> [a -> Bool]
+escolheFuncoes fs x = [f | f <- fs, not (f x)] -- Filtra as funções que retornam False ao serem aplicadas ao argumento x
